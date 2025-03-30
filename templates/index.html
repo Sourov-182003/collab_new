@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recommender System Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            display: inline-block;
+            width: 50%;
+        }
+        h2 {
+            color: #333;
+        }
+        label, input {
+            margin: 10px 0;
+            display: block;
+            width: 100%;
+            text-align: left;
+        }
+        input {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            background: #e9ecef;
+            margin: 5px 0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+    </style>
+    <script>
+        async function getRecommendations() {
+            let userId = document.getElementById("user_id").value;
+            let aisle = document.getElementById("aisle").value;
+            let n = 10; // Number of recommendations
+            let url = aisle ?
+                `/recommend/aisle?user_id=${userId}&aisle=${encodeURIComponent(aisle)}&n=${n}` :
+                `/recommend?user_id=${userId}&n=${n}`;
+
+            try {
+                let response = await fetch(url);
+                let data = await response.json();
+
+                let resultsList = document.getElementById("results");
+                resultsList.innerHTML = "";
+
+                if (data.length === 0) {
+                    resultsList.innerHTML = "<li>No recommendations found.</li>";
+                    return;
+                }
+
+                data.forEach(item => {
+                    let listItem = document.createElement("li");
+                    listItem.textContent = aisle ?
+                        `${item.product} (${item.aisle}) - Rating: ${item.rating.toFixed(2)}` :
+                        `${item.product} - Rating: ${item.rating.toFixed(2)}`;
+                    resultsList.appendChild(listItem);
+                });
+            } catch (error) {
+                console.error("Error fetching recommendations:", error);
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h2>Product Recommendations</h2>
+        <label for="user_id">User ID:</label>
+        <input type="number" id="user_id" value="1">
+        <label for="aisle">Aisle (optional):</label>
+        <input type="text" id="aisle">
+        <button onclick="getRecommendations()">Get Recommendations</button>
+
+        <h3>Results:</h3>
+        <ul id="results"></ul>
+    </div>
+</body>
+</html>
