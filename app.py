@@ -9,11 +9,11 @@ app = Flask(__name__)
 # Load saved models and data with error handling
 print("Loading model and data...")
 try:
-    with open("render-collaborative/svd_model.pkl", "rb") as f:
+    with open("Model_svd.pkl", "rb") as f:
         svd_algo = pickle.load(f)
     print("SVD Model loaded successfully.")
 
-    with open("colaborative_new/user_item.pkl", "rb") as f:
+    with open("user_item.pkl", "rb") as f:
         user_item = pickle.load(f)
     print("User-Item Data loaded successfully.")
 
