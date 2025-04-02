@@ -33,6 +33,24 @@ def home():
     """Render the home page with the recommendation UI"""
     return render_template("index.html")
 
+@app.route("/recommend/past", methods=["GET"])
+def recommend_past():
+    """Get past products for a user"""
+    try:
+        user_id = int(request.args.get("user_id", 1))
+
+        if user_id not in user_item:
+            return jsonify({"error": f"User ID {user_id} not found."}), 400
+
+        # Get past products the user has interacted with
+        past_products = user_item.get(user_id, {})
+        result = [{"product": product_names[pid], "rating": round(rating, 2)}
+                  for pid, rating in past_products.items() if pid in product_names]
+
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 @app.route("/recommend", methods=["GET"])
 def recommend():
     """Get top recommended items for a user"""
