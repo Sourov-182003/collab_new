@@ -2,10 +2,19 @@ from flask import Flask, request, jsonify, render_template
 from waitress import serve
 import pickle
 from surprise import SVD
+from flask_cors import CORS
 
 # Initialize Flask app
 app = Flask(__name__)
 
+# Enable CORS globally for all routes and origins
+CORS(app, resources={
+    r"/*": {
+        "origins": "*",
+        "methods": ["GET", "POST", "OPTIONS", "PUT", "DELETE"],
+        "allow_headers": ["*"]
+    }
+})
 # Load saved models and data with error handling
 print("Loading model and data...")
 try:
