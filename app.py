@@ -9,7 +9,7 @@ app = Flask(__name__)
 # Enhanced CORS configuration
 CORS(app, resources={
     r"/*": {
-        "origins": ["http://localhost:5173", "https://instamart-ejm2.onrender.com"],
+        "origins": ["http://localhost:5173", "https://instamart-ejm2.onrender.com","https://instacart-backend.onrender.com"],
         "methods": ["GET", "POST", "OPTIONS", "PUT", "DELETE"],
         "allow_headers": ["Content-Type", "Authorization"],
         "supports_credentials": True,
