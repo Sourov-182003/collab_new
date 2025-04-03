@@ -4,17 +4,28 @@ import pickle
 from surprise import SVD
 from flask_cors import CORS
 
-# Initialize Flask app
 app = Flask(__name__)
 
-# Enable CORS globally for all routes and origins
+# Enhanced CORS configuration
 CORS(app, resources={
     r"/*": {
-        "origins": "*",
+        "origins": ["http://localhost:5173", "https://instamart-ejm2.onrender.com"],
         "methods": ["GET", "POST", "OPTIONS", "PUT", "DELETE"],
-        "allow_headers": ["*"]
+        "allow_headers": ["Content-Type", "Authorization"],
+        "supports_credentials": True,
+        "max_age": 86400
     }
 })
+
+# Add this after CORS initialization to handle OPTIONS requests
+@app.after_request
+def after_request(response):
+    response.headers.add('Access-Control-Allow-Origin', 'http://localhost:5173')
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+    response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+    response.headers.add('Access-Control-Allow-Credentials', 'true')
+    return response
+
 # Load saved models and data with error handling
 print("Loading model and data...")
 try:
